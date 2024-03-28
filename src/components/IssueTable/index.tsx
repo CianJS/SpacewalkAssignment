@@ -2,12 +2,14 @@ import styled from '@emotion/styled';
 import IssueStatusFilter from './IssueStatusFilter';
 import { Property } from 'csstype';
 import { GithubIssues } from '../../types/github';
+import TablePagination from './TablePagination';
 
 interface Props {
   issueList: GithubIssues[];
+  currentPage: number;
 }
 
-function IssueTable({ issueList }: Props) {
+function IssueTable({ issueList, currentPage }: Props) {
   return (
     <IssueTableContainer>
       <FilterWrapper>
@@ -49,7 +51,8 @@ function IssueTable({ issueList }: Props) {
           ))}
         </TableBody>
       </Table>
-      <PaginationContainer></PaginationContainer>
+
+      <TablePagination currentPage={currentPage} />
     </IssueTableContainer>
   );
 }
@@ -122,5 +125,3 @@ const TableBodyData = styled.td<{ textAlign?: Property.TextAlign }>(
     textOverflow: 'ellipsis',
   })
 );
-
-const PaginationContainer = styled.div``;

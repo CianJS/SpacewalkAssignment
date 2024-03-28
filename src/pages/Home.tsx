@@ -1,5 +1,6 @@
-import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import styled from '@emotion/styled';
 import IssueTable from '../components/IssueTable';
 import { getGithubIssueList } from '../api/APIIssues';
 import {
@@ -7,18 +8,33 @@ import {
   GithubIssueState,
   GithubIssueSort,
 } from '../types/github';
+import { Filter } from '../types/homeTable';
 
 function HomePage() {
+  const location = useLocation();
   const [issueList, setIssueList] = useState<GithubIssues[]>();
   const [page, setPage] = useState<number>(1);
   const [state, setState] = useState<GithubIssueState>(GithubIssueState.all);
   const [sort, setSort] = useState<GithubIssueSort>(GithubIssueSort.CREATED);
 
-  useEffect(() => {
+  const handleChangePage = (pageNumber: number) => setPage(pageNumber);
+
+  const fetchIssueList = () => {
     getGithubIssueList({ perPage: 10, page, state, sort }).then((issueList) =>
       setIssueList(issueList)
     );
-  }, []);
+  };
+
+  useEffect(() => {
+    const filterState = Object.fromEntries(
+      new URLSearchParams(location.search)
+    ) as unknown as Filter;
+    handleChangePage(Number(filterState.page));
+  }, [location.search]);
+
+  useEffect(() => {
+    fetchIssueList();
+  }, [page, state, sort]);
 
   return (
     <HomePageContainer>
@@ -28,7 +44,7 @@ function HomePage() {
 
       <IssueSummaryContainer>
         <TableTitle>이슈정리</TableTitle>
-        {issueList && <IssueTable issueList={issueList} />}
+        {issueList && <IssueTable issueList={issueList} currentPage={page} />}
       </IssueSummaryContainer>
     </HomePageContainer>
   );
