@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import IssueStatusFilter from './IssueStatusFilter';
 import { Property } from 'csstype';
+import { GithubIssues } from '../../types/github';
 
-function IssueTable() {
-  const [test, setTest] = useState('Test');
+interface Props {
+  issueList: GithubIssues[];
+}
 
+function IssueTable({ issueList }: Props) {
   return (
     <IssueTableContainer>
       <FilterWrapper>
@@ -16,56 +18,38 @@ function IssueTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableHeadData width="60px">번호</TableHeadData>
-            <TableHeadData width="420px">제목</TableHeadData>
-            <TableHeadData width="120px">작성자</TableHeadData>
-            <TableHeadData width="90px" textAlign="center">
+            <TableHeadData width="12%">번호</TableHeadData>
+            <TableHeadData width="36%">제목</TableHeadData>
+            <TableHeadData width="11%">작성자</TableHeadData>
+            <TableHeadData width="13%" textAlign="center">
               작성일
             </TableHeadData>
-            <TableHeadData width="90px" textAlign="center">
+            <TableHeadData width="13%" textAlign="center">
               수정일
             </TableHeadData>
-            <TableHeadData width="60px" textAlign="right">
+            <TableHeadData width="10%" textAlign="right">
               코멘트 수
             </TableHeadData>
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableBodyData>1</TableBodyData>
-            <TableBodyData>
-              Fix for script yarn build-for-devtools-dev failing due to
-              argument...
-            </TableBodyData>
-            <TableBodyData>sandeep36butte</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>1</TableBodyData>
-          </TableRow>
-          <TableRow>
-            <TableBodyData>1</TableBodyData>
-            <TableBodyData>
-              Fix for script yarn build-for-devtools-dev failing due to
-              argument...
-            </TableBodyData>
-            <TableBodyData>sandeep36butte</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>1</TableBodyData>
-          </TableRow>
-          <TableRow>
-            <TableBodyData>1</TableBodyData>
-            <TableBodyData>
-              Fix for script yarn build-for-devtools-dev failing due to
-              argument...
-            </TableBodyData>
-            <TableBodyData>sandeep36butte</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>2023-12-25</TableBodyData>
-            <TableBodyData>1</TableBodyData>
-          </TableRow>
+          {issueList?.map((issue) => (
+            <TableRow key={issue.id}>
+              <TableBodyData>{issue.id}</TableBodyData>
+              <TableBodyData>{issue.title}</TableBodyData>
+              <TableBodyData>{issue.user.login}</TableBodyData>
+              <TableBodyData textAlign="center">
+                {issue.created_at}
+              </TableBodyData>
+              <TableBodyData textAlign="center">
+                {issue.updated_at}
+              </TableBodyData>
+              <TableBodyData textAlign="right">{issue.comments}</TableBodyData>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
+      <PaginationContainer></PaginationContainer>
     </IssueTableContainer>
   );
 }
@@ -84,6 +68,7 @@ const Table = styled.table`
   height: 100%;
   margin: 24px 0;
   border-collapse: collapse;
+  table-layout: fixed;
 `;
 
 const TableHead = styled.thead`
@@ -98,7 +83,7 @@ const TableHeadData = styled.th<{
   width: string;
   textAlign?: Property.TextAlign;
 }>(({ width, textAlign = 'left' }) => ({
-  maxWidth: width,
+  width: width,
   textAlign,
   color: '#5a6066',
   fontSize: '14px',
@@ -106,10 +91,10 @@ const TableHeadData = styled.th<{
   lineHeight: '20px',
   padding: '6px 12px',
   textWrap: 'nowrap',
-  ['&:first-child']: {
+  ['&:first-of-type']: {
     borderRadius: '8px 0 0 8px',
   },
-  ['&:last-child']: {
+  ['&:last-of-type']: {
     borderRadius: '0 8px 8px 0',
   },
 }));
@@ -117,9 +102,6 @@ const TableHeadData = styled.th<{
 const TableBody = styled.tbody`
   height: 36px;
   margin-top: 8px;
-  tr {
-    padding: 8px 12px;
-  }
   ::before {
     content: '';
     display: block;
@@ -127,13 +109,18 @@ const TableBody = styled.tbody`
   }
 `;
 
-const TableBodyData = styled.td`
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  color: #5a6066;
-  padding: 6px 12px;
-  text-wrap: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+const TableBodyData = styled.td<{ textAlign?: Property.TextAlign }>(
+  ({ textAlign = 'left' }) => ({
+    textAlign,
+    fontSize: '14px',
+    fontWeight: 500,
+    lineHeight: '20px',
+    color: '#5a6066',
+    padding: '8px 12px',
+    textWrap: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  })
+);
+
+const PaginationContainer = styled.div``;

@@ -1,10 +1,7 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import ArrowDown from '../../../assets/icons/arrow-down.svg';
 
 function IssueStatusFilter() {
-  const [test, setTest] = useState('Test');
-
   return (
     <IssueStatusFilterBox>
       <IssuesFilterText>이슈 상태</IssuesFilterText>

@@ -1,9 +1,25 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IssueTable from '../components/IssueTable';
+import { getGithubIssueList } from '../api/APIIssues';
+import {
+  GithubIssues,
+  GithubIssueState,
+  GithubIssueSort,
+} from '../types/github';
 
 function HomePage() {
-  const [test, setTest] = useState('Test');
+  const [issueList, setIssueList] = useState<GithubIssues[]>();
+  const [page, setPage] = useState<number>(1);
+  const [state, setState] = useState<GithubIssueState>(GithubIssueState.all);
+  const [sort, setSort] = useState<GithubIssueSort>(GithubIssueSort.CREATED);
+
+  useEffect(() => {
+    getGithubIssueList({ perPage: 10, page, state, sort }).then((issueList) =>
+      setIssueList(issueList)
+    );
+  }, []);
+
   return (
     <HomePageContainer>
       <InterviewerContainer>
@@ -12,7 +28,7 @@ function HomePage() {
 
       <IssueSummaryContainer>
         <TableTitle>이슈정리</TableTitle>
-        <IssueTable />
+        {issueList && <IssueTable issueList={issueList} />}
       </IssueSummaryContainer>
     </HomePageContainer>
   );
