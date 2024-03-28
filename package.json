@@ -1,0 +1,33 @@
+{
+  "name": "spacewalk-assignment",
+  "version": "1.0.0",
+  "description": "스페이스워크 과제",
+  "main": "index.tsx",
+  "author": "CianJS",
+  "license": "ISC",
+  "scripts": {
+    "start": "webpack serve"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "axios": "^1.6.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.57",
+    "@types/react-dom": "^18.2.19",
+    "css-loader": "^6.10.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.0",
+    "identity-obj-proxy": "^3.0.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  }
+}
