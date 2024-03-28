@@ -9,11 +9,9 @@ interface Props {
 
 function TablePagination({ currentPage }: Props) {
   const navigate = useNavigate();
-  Math.ceil(5 / 10);
   const pageArray = [...Array(5)].map((v, index) => currentPage + index);
-  const pageChangeEvent = (pageNumber: number) => {
+  const pageChangeEvent = (pageNumber: number) =>
     pageNumber !== currentPage && navigate(`/home?page=${pageNumber}`);
-  };
 
   return (
     <PaginationContainer>

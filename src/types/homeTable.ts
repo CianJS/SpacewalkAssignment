@@ -1,5 +1,7 @@
+import { GithubIssueState } from './github';
+
 export type Filter = {
   page: string;
-  state: string;
+  state: GithubIssueState;
   sort: string;
 };

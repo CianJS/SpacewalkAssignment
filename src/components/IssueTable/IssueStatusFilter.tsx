@@ -1,10 +1,20 @@
 import styled from '@emotion/styled';
 import ArrowDown from '../../../assets/icons/arrow-down.svg';
+import { GithubIssueState } from '../../types/github';
 
-function IssueStatusFilter() {
+interface Props {
+  state: GithubIssueState;
+  handleClick: () => void;
+}
+
+function IssueStatusFilter({ state, handleClick }: Props) {
   return (
-    <IssueStatusFilterBox>
-      <IssuesFilterText>이슈 상태</IssuesFilterText>
+    <IssueStatusFilterBox onClick={handleClick}>
+      <IssuesFilterText
+        className={state === GithubIssueState.all ? '' : 'selected'}
+      >
+        {state === GithubIssueState.all ? '이슈 상태' : state}
+      </IssuesFilterText>
       <IssueStatusFilterIcon src={ArrowDown} alt="열기" />
     </IssueStatusFilterBox>
   );
@@ -28,6 +38,9 @@ const IssuesFilterText = styled.span`
   font-size: 14px;
   font-weight: 500;
   text-align: center;
+  &.selected {
+    color: #1a8cff;
+  }
 `;
 
 const IssueStatusFilterIcon = styled.img`

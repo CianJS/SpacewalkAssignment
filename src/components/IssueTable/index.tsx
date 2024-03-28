@@ -1,21 +1,50 @@
 import styled from '@emotion/styled';
 import IssueStatusFilter from './IssueStatusFilter';
 import { Property } from 'csstype';
-import { GithubIssues } from '../../types/github';
+import { GithubIssues, GithubIssueState } from '../../types/github';
 import TablePagination from './TablePagination';
+import { useState } from 'react';
+import IssuesFilterModal from '../Modal/IssuesFilterModal';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Filter } from '../../types/homeTable';
 
 interface Props {
   issueList: GithubIssues[];
   currentPage: number;
+  state: GithubIssueState;
+  handleChangeState: (state: GithubIssueState) => void;
 }
 
-function IssueTable({ issueList, currentPage }: Props) {
+function IssueTable({ issueList, currentPage, state }: Props) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [openStateModal, setOpenStateModal] = useState<Boolean>(false);
+
+  const applyIssueStateFilter = (newState: GithubIssueState) => {
+    const filterState = Object.fromEntries(
+      new URLSearchParams(location.search)
+    ) as unknown as Filter;
+    filterState.state = newState;
+    state !== newState &&
+      navigate('/home?' + new URLSearchParams(filterState).toString());
+    setOpenStateModal(false);
+  };
+
+  const handleOpenStateModal = () => setOpenStateModal(true);
+
   return (
     <IssueTableContainer>
       <FilterWrapper>
-        <IssueStatusFilter />
-        <IssueStatusFilter />
+        <IssueStatusFilter state={state} handleClick={handleOpenStateModal} />
+        <div>작성일 순</div>
       </FilterWrapper>
+      {openStateModal && (
+        <IssuesFilterModal
+          currentState={state}
+          applyIssueStateFilter={applyIssueStateFilter}
+          handleCloseModal={() => setOpenStateModal(false)}
+        />
+      )}
 
       <Table>
         <TableHead>

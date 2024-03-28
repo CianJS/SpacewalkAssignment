@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import IssueTable from '../components/IssueTable';
 import { getGithubIssueList } from '../api/APIIssues';
@@ -18,6 +18,7 @@ function HomePage() {
   const [sort, setSort] = useState<GithubIssueSort>(GithubIssueSort.CREATED);
 
   const handleChangePage = (pageNumber: number) => setPage(pageNumber);
+  const handleChangeState = (state: GithubIssueState) => setState(state);
 
   const fetchIssueList = () => {
     getGithubIssueList({ perPage: 10, page, state, sort }).then((issueList) =>
@@ -30,6 +31,7 @@ function HomePage() {
       new URLSearchParams(location.search)
     ) as unknown as Filter;
     handleChangePage(Number(filterState.page));
+    handleChangeState(filterState.state);
   }, [location.search]);
 
   useEffect(() => {
@@ -44,7 +46,14 @@ function HomePage() {
 
       <IssueSummaryContainer>
         <TableTitle>이슈정리</TableTitle>
-        {issueList && <IssueTable issueList={issueList} currentPage={page} />}
+        {issueList && (
+          <IssueTable
+            issueList={issueList}
+            currentPage={page}
+            state={state}
+            handleChangeState={handleChangeState}
+          />
+        )}
       </IssueSummaryContainer>
     </HomePageContainer>
   );
